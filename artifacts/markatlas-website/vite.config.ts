@@ -4,22 +4,39 @@ import tailwindcss from "@tailwindcss/vite";
 import path from "path";
 import runtimeErrorOverlay from "@replit/vite-plugin-runtime-error-modal";
 
-// Only require PORT and BASE_PATH in non-build environments
-const isProduction = process.env.NODE_ENV === "production";
+// Skip PORT/BASE_PATH checks during Vercel build
+const isVercelBuild = process.env.VERCEL === "1";
+const isBuild = process.argv.includes("build");
 
-const rawPort = process.env.PORT || "5173"; // Default port for build
-const basePath = process.env.BASE_PATH || "/";
+let port = 5173;
+let basePath = "/";
 
-if (!isProduction && !process.env.PORT) {
-  console.warn(
-    "PORT environment variable not provided, using default port 5173",
-  );
-}
+if (!isVercelBuild && !isBuild) {
+  const rawPort = process.env.PORT;
+  const rawBasePath = process.env.BASE_PATH;
 
-const port = Number(rawPort);
+  if (!rawPort) {
+    throw new Error(
+      "PORT environment variable is required but was not provided.",
+    );
+  }
 
-if (Number.isNaN(port) || port <= 0) {
-  throw new Error(`Invalid PORT value: "${rawPort}"`);
+  if (!rawBasePath) {
+    throw new Error(
+      "BASE_PATH environment variable is required but was not provided.",
+    );
+  }
+
+  port = Number(rawPort);
+  basePath = rawBasePath;
+
+  if (Number.isNaN(port) || port <= 0) {
+    throw new Error(`Invalid PORT value: "${rawPort}"`);
+  }
+} else {
+  // Use environment variables if provided, otherwise defaults
+  port = Number(process.env.PORT || 5173);
+  basePath = process.env.BASE_PATH || "/";
 }
 
 export default defineConfig({
