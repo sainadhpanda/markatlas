@@ -10,9 +10,6 @@
   },
   "framework": "vite",
   "regions": ["iad1"],
-  "projectSettings": {
-    "framework": "vite"
-  },
   "rewrites": [
     {
       "source": "/(.*)",
