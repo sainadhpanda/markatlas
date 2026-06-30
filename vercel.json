@@ -1,7 +1,7 @@
 {
   "version": 2,
   "buildCommand": "pnpm run build",
-  "outputDirectory": "artifacts/markatlas-website/dist/public",
+  "outputDirectory": "artifacts/markatlas-website/dist",
   "installCommand": "pnpm install --frozen-lockfile",
   "env": {
     "PORT": "3000",
